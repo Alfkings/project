@@ -313,7 +313,8 @@ app.put('/company/project/:id',async(req,res)=>{
      const updProject =await prisma.project.update({
         where:{
             id:+req.params.id
-        }
+        },
+        data:req.body
      })  
      res.status(200).json(updProject) 
     } catch (error) {
@@ -389,6 +390,18 @@ app.put('/updProfile/:id',async(req,res)=>{
     res.status(200).json(updprofile)
     } catch (error) {
         res.status(400).json({message:"error in updating profile"})
+    }
+})
+app.delete('/delProfile/:id',async(req,res)=>{
+    try {
+     const delProfile=await prisma.profile.delete({
+        where:{
+            id:+req.params.id
+        }
+     })   
+     res.status(200).json(delProfile)
+    } catch (error) {
+    res.status(400).json({message:"error in deleting the profile"})    
     }
 })
 
