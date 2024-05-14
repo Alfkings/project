@@ -130,11 +130,11 @@ app.get('/owner/:id/company',async(req,res)=>{
         res.status(400).json({message:"error in fetching company"})
     }
 })
-app.get('/company/employees',async(req,res)=>{
+app.get('/company/:id/employees',async(req,res)=>{
     try {
         const companyEmployee = await prisma.company.findFirst({
            where:{
-            name:req.body.name
+            name:req.params.id
            } ,
            include:{
             Employee:true,
