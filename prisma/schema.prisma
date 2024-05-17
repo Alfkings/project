@@ -37,17 +37,17 @@ model Company {
 }
 
 model Employee {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
   phone     String
   salary    Int
   companyId Int
-  company   Company   @relation(fields: [companyId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id])
   projectId Int?
-  project   project?  @relation(fields: [projectId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Profile   Profile[]
+  project   project? @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Profile   Profile?
 
   @@map("employee")
 }
@@ -68,16 +68,16 @@ model project {
 }
 
 model Profile {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   image            String
   email            String
   emergencyContact String
   bloodGroup       String
   dateOfBirth      String
-  employee         Employee @relation(fields: [employeeId], references: [id])
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  employeeId       Int
+  employee         Employee? @relation(fields: [employeeId], references: [id])
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  employeeId       Int       @unique
 
   @@map("profile")
 }
