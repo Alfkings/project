@@ -37,32 +37,49 @@ model Company {
 }
 
 model Employee {
-  id        Int      @id @default(autoincrement())
-  name      String
-  phone     String
-  salary    Int
-  companyId Int
-  company   Company  @relation(fields: [companyId], references: [id])
-  projectId Int?
-  project   project? @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Profile   Profile?
+  id                       Int       @id @default(autoincrement())
+  name                     String
+  phone                    String
+  salary                   Int
+  companyId                Int
+  company                  Company   @relation(fields: [companyId], references: [id])
+  projectId                Int?
+  project                  project?  @relation("AllProjects", fields: [projectId], references: [ProjectId])
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  Profile                  Profile?
+  projectManager           project[] @relation("ProjectManager")
+  projectAccountController project[] @relation("ProjectAccountController")
 
   @@map("employee")
 }
 
-model project {
-  id              Int     @id @default(autoincrement())
-  name            String
-  type            String
-  estematedAmount Int
-  companyId       Int
-  company         Company @relation(fields: [companyId], references: [id])
+enum projectType {
+  fixed
+  timeAndMaterial
+  progressive
+}
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Employee  Employee[]
+model project {
+  ProjectId                  Int         @id @default(autoincrement())
+  projectName                String
+  customerName               Customer    @relation(fields: [customerId], references: [id])
+  projectGroup               String
+  projectType                projectType
+  StartDate                  DateTime
+  DueDate                    DateTime?
+  ProjectOwner               String
+  projectManagerId           Int?
+  projectManager             Employee?   @relation("ProjectManager", fields: [projectManagerId], references: [id])
+  projectAccountControllerId Int?
+  projectAccountController   Employee?   @relation("ProjectAccountController", fields: [projectAccountControllerId], references: [id])
+  companyId                  Int
+  company                    Company     @relation(fields: [companyId], references: [id])
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Employee   Employee[] @relation("AllProjects")
+  customerId Int
 
   @@map("project")
 }
@@ -80,4 +97,34 @@ model Profile {
   employeeId       Int       @unique
 
   @@map("profile")
+}
+
+model Customer {
+  id           Int    @id @default(autoincrement())
+  CustomerName String
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  project         project[]
+  CustomerProfile CustomerProfile[]
+
+  @@map("customer")
+}
+
+model CustomerProfile {
+  id          Int       @id @default(autoincrement())
+  companyName String
+  email       String
+  phone       String
+  address     String
+  pincode     String
+  fax         String?
+  website     String?
+  customer    Customer? @relation(fields: [customerId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customerId Int?
+
+  @@map("customer_profile")
 }
