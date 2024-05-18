@@ -81,7 +81,8 @@ model project {
   Employee   Employee[] @relation("AllProjects")
   customerId Int
 
-  @@index([projectManagerId, projectAccountControllerId])
+  @@index([projectManagerId])
+  @@index([projectAccountControllerId])
   @@map("project")
 }
 
